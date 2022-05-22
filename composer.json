@@ -1,0 +1,21 @@
+{
+    "name": "jhonesdev/pfx-to-pem",
+    "description": "Converte certificado PFX em arquivo PEM com chave privada",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kessy jhones rodrigues de sousa",
+            "email": "kessy.contato@yahoo.com.br"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "JhonesDev\\PfxToPem\\": "src/"
+        }
+    },
+    "require":{
+        "php": ">=7.4",
+        "ext-openssl": "*"
+    }
+}
