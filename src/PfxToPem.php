@@ -4,68 +4,8 @@ namespace JhonesDev\PfxToPem;
 
 use Exception;
 
-class PfxToPem
+class PfxToPem extends Certificate
 {
-
-    private $pfxFile;
-    private $pfxPath;
-    private $pfxPass;
-    private $tempFilesPath;
-    private $tempFilesPrefix;
-
-    public function __construct()
-    {
-        $this->tempFilesPath = dirname(__DIR__, 1) . "/temp";
-        $this->tempFilesPrefix = md5(uniqid(rand(), true));
-    }
-
-    /**
-     * Set the value of pfxFile
-     *
-     * @return  self
-     */
-    public function setPfxFile($pfxFile)
-    {
-        $this->pfxFile = $pfxFile;
-
-        return $this;
-    }
-
-    /**
-     * Set the value of pfxPath
-     *
-     * @return  self
-     */
-    public function setPfxPath($pfxPath)
-    {
-        $this->pfxPath = $pfxPath;
-
-        return $this;
-    }
-
-    /**
-     * Set the value of pfxPass
-     *
-     * @return  self
-     */
-    public function setPfxPass($pfxPass)
-    {
-        $this->pfxPass = $pfxPass;
-
-        return $this;
-    }
-
-    /**
-     * Set the value of tempFilesPath
-     *
-     * @return  self
-     */
-    public function setTempFilesPath($tempFilesPath)
-    {
-        $this->tempFilesPath = $tempFilesPath;
-
-        return $this;
-    }
 
     /**
      * Open certificate with OpenSSL
@@ -108,11 +48,27 @@ class PfxToPem
     }
 
     /**
-     * Generate Temp Files
+     * Get certificate details
      *
-     * @return array
+     * @return  array
      */
-    private function generateTempFiles($certificateData)
+    public function detail()
+    {
+        $certificateData = $this->open();
+        $cert = $certificateData['pkey'] . $certificateData['cert'];
+        if (!$resource = openssl_x509_read($cert)) {
+            throw new Exception("Certificate unable to open.");
+        }
+        $detail = openssl_x509_parse($resource, false);
+        return $detail;
+    }
+
+    /**
+     * Generate Temp .Pem Files
+     *
+     * @return stdClass
+     */
+    private function generateTempPemFiles($certificateData)
     {
 
         if (!file_exists($this->tempFilesPath)) {
@@ -135,21 +91,36 @@ class PfxToPem
             throw new Exception("Error creating temporary files. Check if the temporary folder exists and has permissions");
         }
 
-        return [
+        return (object) [
             "cert" => $this->tempFilesPath . "/" . $this->tempFilesPrefix . "_cert.pem",
             "pkey" => $this->tempFilesPath . "/" . $this->tempFilesPrefix . "_pkey.pem",
         ];
     }
 
     /**
-     * Delete Temp Files
+     * Generate Temp .cer File
      *
-     * @return
+     * @return array
      */
-    public function __destruct()
+    function generateTempCerFile($contents)
     {
-        unlink($this->tempFilesPath . "/" . $this->tempFilesPrefix . "_cert.pem");
-        unlink($this->tempFilesPath . "/" . $this->tempFilesPrefix . "_pkey.pem");
+        if (!file_exists($this->tempFilesPath)) {
+            if ($this->tempFilesPath != dirname(__DIR__, 1) . "/temp") {
+                throw new Exception("Temp file path informed is not found. $this->tempFilesPath");
+            } else {
+                mkdir($this->tempFilesPath);
+            }
+        }
+
+        if (!is_dir($this->tempFilesPath)) {
+            throw new Exception("Temp file path informed is not a dir. $this->tempFilesPath");
+        }
+
+        if (!file_put_contents($this->tempFilesPath . "/" . $this->tempFilesPrefix . ".cer", $contents)) {
+            throw new Exception("Error creating temporary files. Check if the temporary folder exists and has permissions");
+        }
+
+        return $this->tempFilesPath . "/" . $this->tempFilesPrefix . ".cer";
     }
 
     /**
@@ -160,6 +131,18 @@ class PfxToPem
     public function toPem()
     {
         $certificate = $this->open();
-        return $this->generateTempFiles($certificate);
+        return $this->generateTempPemFiles($certificate);
+    }
+
+    /**
+     * Convert certificate to cer
+     *
+     * @return string
+     */
+    public function toCer()
+    {
+        $certificate = $this->open();
+        $cert = $certificate['pkey'] . $certificate['cert'];
+        return $this->generateTempCerFile($cert);
     }
 }

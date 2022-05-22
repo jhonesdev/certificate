@@ -9,9 +9,11 @@ $PfxToPem = new PfxToPem();
 try {
     
     $PfxToPem->setPfxPath('C:/certificate.pfx');
-    $PfxToPem->setPfxPass('000000');
+    $PfxToPem->setPfxPass('*******');
     
-    var_dump($PfxToPem->toPem());
+    $certificatePem = $PfxToPem->toPem();
+    $certificateCer = $PfxToPem->toCer();
+    $certificateDetail = $PfxToPem->detail();
 
 } catch (\Exception $e) {
     echo $e->getMessage();
