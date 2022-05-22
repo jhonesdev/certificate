@@ -23,6 +23,11 @@ composer require jhonesdev/pfx-to-pem
 $PfxToPem = new PfxToPem();
 ```
 
+* Definindo pasta de arquivos temporarios(Opcional)
+```
+$PfxToPem->setTempFilesPath("Diretorio");
+```
+
 * Definindo o arquivo pfx original. Pode informar o caminho do arquivo ou o conteudo caso o arquivo esteja salvo no banco de dados.
 ```
 //Define o caminho do arquivo
