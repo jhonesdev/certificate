@@ -1,6 +1,6 @@
 {
-    "name": "jhonesdev/pfx-to-pem",
-    "description": "Converte certificado PFX em arquivo PEM com chave privada",
+    "name": "jhonesdev/certificate",
+    "description": "Ler certificado PFX e converte em '.pem' e '.cer'.",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -11,7 +11,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "JhonesDev\\PfxToPem\\": "src/"
+            "JhonesDev\\Certificate\\": "src/"
         }
     },
     "require":{

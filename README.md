@@ -1,49 +1,62 @@
-## PFX TO PEM
+## PFX Reader
 
-Este pacote tem como objetivo gerar as chaves SSL do certificado digital para uso em requisições a APIs que necessitam desse tipo de autenticação.
+Este pacote tem como objetivo converter arquivo ".pfx" em ".pem" e ".cer" além de ler os dados do certificado
 
 ### Como funciona
 
-O pacote gera os chaves do certificado em uma pasta temporaria que pode ser personalizada e quando a classe e destruida esses arquivos são apagados automaticamente.
+O pacote gera os arquivos em uma pasta temporaria que pode ser personalizada e quando a classe e destruida esses arquivos são apagados automaticamente.
 
 ### Requerimentos
 
+* php >= 7.4
 * extension=openssl
 
 ### Instalação
 
 ```
-composer require jhonesdev/pfx-to-pem
+composer require jhonesdev/certificate
 ```
 
 ### Uso do pacote
 
 * Instancia a classe de conversão
 ```
-$PfxToPem = new PfxToPem();
+$Pfx = new PFX();
 ```
 
 * Definindo pasta de arquivos temporarios(Opcional)
 ```
-$PfxToPem->setTempFilesPath("Diretorio");
+$Pfx->setTempFilesPath("Diretorio");
 ```
 
 * Definindo o arquivo pfx original. Pode informar o caminho do arquivo ou o conteudo caso o arquivo esteja salvo no banco de dados.
 ```
 //Define o caminho do arquivo
-$PfxToPem->setPfxPath("Caminho do arquivo .pfx"); 
+$Pfx->setPfxPath("Caminho do arquivo .pfx"); 
 //Define o conteudo do arquivo
-$PfxToPem->setPfxFile("Conteudo do arquivo .pfx");
+$Pfx->setPfxFile("Conteudo do arquivo .pfx");
 //Atenção !!! Utilizar apenas uma das opções acima 
 ```
 
 * Definindo a senha do certificado
 ```
-$PfxToPem->setPfxPass('Senha do certificado');
+$Pfx->setPfxPass('Senha do certificado');
 ```
 
-* Gerando as chaves. Nesse momento se tudo estiver correto o pacote irá criar os arquivos com as chaves cert.pem e pkey.pem em uma pasta temporaria quando a classe é destruida esses arquivos são apagados.
+* Detalhes do certificado. Retorna um array o conteudo do certificado.
 ```
-$keys = $PfxToPem->toPem();
+$keys = $Pfx->detail();
+
+```
+
+* Gerando arquivos ".pem". O pacote irá criar os arquivos "cert.pem" e "pkey.pem" em uma pasta temporaria quando a classe é destruida esses arquivos são apagados e retorna um stdClass com o caminho dos arquivos.
+```
+$keys = $Pfx->toPem();
+
+```
+
+* Gerando arquivo ".cer". O pacote irá criar o arquivo ".cer" em uma pasta temporaria quando a classe é destruida esses arquivos são apagados e retorna o caminho do arquivo.
+```
+$keys = $Pfx->toCer();
 
 ```

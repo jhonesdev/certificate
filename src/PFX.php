@@ -1,10 +1,10 @@
 <?php
 
-namespace JhonesDev\PfxToPem;
+namespace JhonesDev\Certificate;
 
 use Exception;
 
-class PfxToPem extends Certificate
+class PFX extends Certificate
 {
 
     /**

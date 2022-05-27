@@ -2,18 +2,23 @@
 
 require "../vendor/autoload.php";
 
-use JhonesDev\PfxToPem\PfxToPem;
-
-$PfxToPem = new PfxToPem();
+use JhonesDev\Certificate\PFX;
 
 try {
     
-    $PfxToPem->setPfxPath('C:/certificate.pfx');
-    $PfxToPem->setPfxPass('*******');
+    $Pfx = new PFX();
+    $Pfx->setPfxPath('C:/certificate.pfx');
+    $Pfx->setPfxPass('********');
     
-    $certificatePem = $PfxToPem->toPem();
-    $certificateCer = $PfxToPem->toCer();
-    $certificateDetail = $PfxToPem->detail();
+    echo '<pre>';
+
+    print_r([
+        'pemFile' => $Pfx->toPem(),
+        'cerFile' => $Pfx->toCer(),
+        'detail' => $Pfx->detail()
+    ]);
+
+    echo '</pre>';
 
 } catch (\Exception $e) {
     echo $e->getMessage();

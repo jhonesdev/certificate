@@ -1,6 +1,6 @@
 <?php
 
-namespace JhonesDev\PfxToPem;
+namespace JhonesDev\Certificate;
 
 abstract class Certificate
 {
